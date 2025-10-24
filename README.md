@@ -1,2 +1,687 @@
-# serlisa
-Website Sastra Indonesia karya Serli SA
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Sastra Indonesia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Garamond', serif;
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 25%, #3d2416 50%, #2c1810 75%);
+            position: relative;
+            color: #f5e6d3;
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Vintage paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(245, 230, 211, 0.03) 2px,
+                    rgba(245, 230, 211, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(245, 230, 211, 0.03) 2px,
+                    rgba(245, 230, 211, 0.03) 4px
+                );
+            pointer-events: none;
+            opacity: 0.4;
+            z-index: 1;
+        }
+
+        /* Vintage stains and aging effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(101, 67, 33, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(101, 67, 33, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(139, 90, 43, 0.1) 0%, transparent 40%),
+                radial-gradient(ellipse at 90% 20%, rgba(101, 67, 33, 0.2) 0%, transparent 45%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(44, 24, 16, 0.8);
+            border: 3px solid #8b6f47;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.5),
+                0 5px 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        header::before {
+            content: '❦';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            color: #d4af37;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #d4af37;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.8),
+                0 0 10px rgba(212, 175, 55, 0.3);
+            margin-bottom: 15px;
+            font-weight: normal;
+            letter-spacing: 3px;
+            font-variant: small-caps;
+        }
+
+        .tagline {
+            color: #c9a962;
+            font-style: italic;
+            font-size: 1.2em;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            background: rgba(44, 24, 16, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid #8b6f47;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        nav button {
+            background: linear-gradient(to bottom, #8b6f47 0%, #6d5636 100%);
+            color: #f5e6d3;
+            border: 2px solid #5a4529;
+            padding: 12px 25px;
+            margin: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-weight: normal;
+            font-family: 'Georgia', serif;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        nav button:hover {
+            background: linear-gradient(to bottom, #9d7d4f 0%, #7d6340 100%);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        nav button.active {
+            background: linear-gradient(to bottom, #d4af37 0%, #b8941f 100%);
+            color: #2c1810;
+            border: 2px solid #b8941f;
+        }
+
+        .content {
+            background: rgba(44, 24, 16, 0.85);
+            padding: 40px;
+            border-radius: 5px;
+            border: 2px solid #8b6f47;
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.5);
+            min-height: 400px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .item-card {
+            background: rgba(74, 44, 26, 0.5);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+            border-left: 5px solid #d4af37;
+            border-right: 1px solid #5a4529;
+            border-top: 1px solid #5a4529;
+            border-bottom: 1px solid #5a4529;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .item-card:hover {
+            background: rgba(74, 44, 26, 0.7);
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .item-card h3 {
+            color: #d4af37;
+            margin-bottom: 12px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .item-preview {
+            color: #c9a962;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .item-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 3px;
+            margin-top: 15px;
+            pointer-events: none;
+            border: 2px solid #8b6f47;
+            filter: sepia(30%) contrast(90%);
+        }
+
+        .full-content {
+            line-height: 2;
+            font-size: 1.15em;
+            color: #f5e6d3;
+            text-align: justify;
+            padding: 20px 0;
+            text-indent: 2em;
+        }
+
+        .back-btn {
+            background: linear-gradient(to bottom, #8b6f47 0%, #6d5636 100%);
+            color: #f5e6d3;
+            border: 2px solid #5a4529;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 1em;
+            font-family: 'Georgia', serif;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(to bottom, #9d7d4f 0%, #7d6340 100%);
+        }
+
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(212, 175, 55, 0.4);
+        }
+
+        .comment {
+            background: rgba(74, 44, 26, 0.4);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+            border: 1px solid #5a4529;
+        }
+
+        .comment-author {
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-variant: small-caps;
+            letter-spacing: 1px;
+        }
+
+        .comment-text {
+            color: #f5e6d3;
+            line-height: 1.6;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+        }
+
+        .comment-form input,
+        .comment-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(74, 44, 26, 0.5);
+            border: 2px solid #8b6f47;
+            border-radius: 3px;
+            color: #f5e6d3;
+            font-family: 'Georgia', serif;
+        }
+
+        .comment-form input::placeholder,
+        .comment-form textarea::placeholder {
+            color: #a08560;
+        }
+
+        .comment-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .comment-form button {
+            background: linear-gradient(to bottom, #d4af37 0%, #b8941f 100%);
+            color: #2c1810;
+            border: 2px solid #b8941f;
+            padding: 12px 30px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            font-family: 'Georgia', serif;
+            letter-spacing: 1px;
+        }
+
+        .comment-form button:hover {
+            background: linear-gradient(to bottom, #e0c04d 0%, #c9a535 100%);
+        }
+
+        .saweria-section {
+            text-align: center;
+        }
+
+        .saweria-btn {
+            display: inline-block;
+            background: linear-gradient(to bottom, #8b4513 0%, #654321 100%);
+            color: #f5e6d3;
+            padding: 20px 40px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s;
+            border: 3px solid #654321;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .saweria-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to bottom, #a0522d 0%, #704a28 100%);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .admin-panel {
+            background: rgba(212, 175, 55, 0.15);
+            padding: 25px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 2px solid #8b6f47;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .admin-panel input[type="file"] {
+            background: rgba(74, 44, 26, 0.5);
+            padding: 10px;
+            border-radius: 3px;
+            border: 2px solid #8b6f47;
+            color: #f5e6d3;
+            margin-top: 10px;
+            font-family: 'Georgia', serif;
+        }
+
+        .admin-panel button {
+            background: linear-gradient(to bottom, #d4af37 0%, #b8941f 100%);
+            color: #2c1810;
+            border: 2px solid #b8941f;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+            font-family: 'Georgia', serif;
+            margin-right: 10px;
+        }
+
+        .admin-panel button:hover {
+            background: linear-gradient(to bottom, #e0c04d 0%, #c9a535 100%);
+        }
+
+        /* Decorative elements */
+        h2::before, h2::after {
+            content: '❦';
+            margin: 0 15px;
+            opacity: 0.5;
+            font-size: 0.8em;
+        }
+
+        /* Prevent screenshot and copy */
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .protected-content {
+            pointer-events: none;
+        }
+
+        @media print {
+            body { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            nav button { padding: 10px 15px; font-size: 0.9em; }
+            .content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Portal Sastra Indonesia</h1>
+            <p class="tagline">Merangkai Kata, Melestarikan Warisan</p>
+        </header>
+
+        <nav>
+            <button class="active" onclick="showSection('home')">Beranda</button>
+            <button onclick="showSection('cerpen')">Kumpulan Cerpen</button>
+            <button onclick="showSection('puisi')">Kumpulan Puisi</button>
+            <button onclick="showSection('saweria')">Dukung Karya</button>
+        </nav>
+
+        <div class="content">
+            <!-- HOME -->
+            <div id="home" class="section active">
+                <h2 style="color: #d4af37; margin-bottom: 20px;">Selamat Datang di Portal Sastra</h2>
+                <p style="line-height: 1.8; font-size: 1.1em;">
+                    Selamat datang di ruang imajinasi tempat kata-kata menjelma menjadi kehidupan. 
+                    Di sini, Anda akan menemukan kumpulan cerpen dan puisi yang lahir dari renungan 
+                    mendalam tentang kehidupan dan kemanusiaan.
+                </p>
+                <p style="line-height: 1.8; font-size: 1.1em; margin-top: 20px;">
+                    Setiap karya adalah serpihan jiwa, ditulis dengan harapan dapat menyentuh hati pembaca. 
+                    Silakan jelajahi, rasakan, dan tinggalkan jejak Anda di kolom komentar.
+                </p>
+                
+                <div class="admin-panel">
+                    <h3 style="color: #d4af37; margin-bottom: 15px;">🔒 Panel Admin - Ubah Background</h3>
+                    <p style="color: #c9a962; margin-bottom: 10px;">Upload gambar background custom Anda (hanya admin yang bisa mengubah)</p>
+                    <input type="file" id="bgUpload" accept="image/*">
+                    <button onclick="changeBackground()">Terapkan Background</button>
+                    <button onclick="resetBackground()">Reset ke Default</button>
+                </div>
+            </div>
+
+            <!-- CERPEN LIST -->
+            <div id="cerpen" class="section">
+                <h2 style="color: #d4af37; margin-bottom: 20px;">Kumpulan Cerpen</h2>
+                <div id="cerpenList"></div>
+            </div>
+
+            <!-- PUISI LIST -->
+            <div id="puisi" class="section">
+                <h2 style="color: #d4af37; margin-bottom: 20px;">Kumpulan Puisi</h2>
+                <div id="puisiList"></div>
+            </div>
+
+            <!-- SAWERIA -->
+            <div id="saweria" class="section saweria-section">
+                <h2 style="color: #d4af37; margin-bottom: 20px;">Dukung Karya Saya</h2>
+                <p style="line-height: 1.8; font-size: 1.1em; margin-bottom: 30px;">
+                    Jika karya-karya saya menyentuh hati Anda dan ingin mendukung perjalanan kreatif saya, 
+                    Anda dapat memberikan dukungan melalui Saweria. Setiap dukungan sangat berarti dan 
+                    membantu saya untuk terus berkarya.
+                </p>
+                <a href="https://saweria.co/serlisa20" target="_blank" class="saweria-btn">
+                    ❤ Dukung via Saweria
+                </a>
+                <p style="margin-top: 30px; color: #c9a962; font-style: italic;">
+                    Terima kasih atas dukungan dan apresiasinya! 🙏
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Prevent right click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Prevent keyboard shortcuts for screenshot and copy
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'a' || e.key === 's' || e.key === 'p')) || 
+                e.key === 'PrintScreen' || e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'PrintScreen') {
+                navigator.clipboard.writeText('');
+            }
+        });
+
+        // Sample data
+        let cerpenData = [
+            {
+                id: 1,
+                title: "Hujan di Penghujung Senja",
+                preview: "Hujan turun membasahi jalanan kota yang sepi...",
+                image: "",
+                content: "Hujan turun membasahi jalanan kota yang sepi. Aku berdiri di bawah atap tua yang bocor, menatap tetes-tetes air yang jatuh seperti air mata langit. Di kejauhan, seorang perempuan berlari dengan payung merah yang hampir terbang ditiup angin.\n\nKata-kata yang ingin kusampaikan padanya kini tenggelam dalam derasnya hujan. Mungkin memang begitu takdir kita, hanya bertemu di penghujung senja, ketika hari hampir berakhir dan malam akan tiba.\n\n(Tambahkan cerpen lengkap Anda di sini)",
+                comments: []
+            },
+            {
+                id: 2,
+                title: "Secangkir Kopi dan Kenangan",
+                preview: "Aroma kopi mengepul di pagi yang dingin...",
+                image: "",
+                content: "Aroma kopi mengepul di pagi yang dingin. Setiap tegukan membawa kenangan yang tak pernah pudar. Kafe tua ini masih sama seperti dulu, tempat di mana kita pernah tertawa bersama.\n\nKini kursi di depanku kosong. Hanya jejak-jejak memori yang masih terpatri di setiap sudut ruangan.\n\n(Tambahkan cerpen lengkap Anda di sini)",
+                comments: []
+            }
+        ];
+
+        let puisiData = [
+            {
+                id: 1,
+                title: "Bintang di Malam Sunyi",
+                preview: "Di langit yang gelap...",
+                content: "Di langit yang gelap\nBintang bersinar sendiri\nMenunggu fajar tiba\n\nSeperti harapan kecil\nYang tertanam di dada\nMenunti waktunya mekar\n\nMeski malam panjang\nBintang tak pernah padam\nMemberi cahaya pada yang tersesat",
+                comments: []
+            },
+            {
+                id: 2,
+                title: "Jejak di Pasir Pantai",
+                preview: "Ombak datang dan pergi...",
+                content: "Ombak datang dan pergi\nMenghapus jejak kaki di pasir\nSeperti waktu yang tak bisa kembali\n\nAku berdiri di tepi\nMemandang cakrawala\nBertanya pada angin\nKemana kau membawa mimpi-mimpiku",
+                comments: []
+            }
+        ];
+
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(section).classList.add('active');
+            
+            // Find and activate the corresponding nav button
+            const buttons = document.querySelectorAll('nav button');
+            buttons.forEach((btn, index) => {
+                const sections = ['home', 'cerpen', 'puisi', 'saweria'];
+                if (sections[index] === section) {
+                    btn.classList.add('active');
+                }
+            });
+
+            if (section === 'cerpen') renderCerpenList();
+            if (section === 'puisi') renderPuisiList();
+        }
+
+        function renderCerpenList() {
+            const list = document.getElementById('cerpenList');
+            list.innerHTML = cerpenData.map(item => `
+                <div class="item-card" onclick="viewCerpen(${item.id})">
+                    <h3>${item.title}</h3>
+                    <p class="item-preview">${item.preview}</p>
+                    ${item.image ? `<img src="${item.image}" class="item-image" alt="${item.title}">` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderPuisiList() {
+            const list = document.getElementById('puisiList');
+            list.innerHTML = puisiData.map(item => `
+                <div class="item-card" onclick="viewPuisi(${item.id})">
+                    <h3>${item.title}</h3>
+                    <p class="item-preview">${item.preview}</p>
+                </div>
+            `).join('');
+        }
+
+        function viewCerpen(id) {
+            const item = cerpenData.find(c => c.id === id);
+            const section = document.getElementById('cerpen');
+            
+            section.innerHTML = `
+                <button class="back-btn" onclick="event.preventDefault(); showSection('cerpen')">← Kembali</button>
+                <h2 style="color: #d4af37; margin-bottom: 20px;">${item.title}</h2>
+                ${item.image ? `<img src="${item.image}" class="item-image" alt="${item.title}">` : ''}
+                <div class="full-content protected-content">${item.content.replace(/\n/g, '<br><br>')}</div>
+                
+                <div class="comments-section">
+                    <h3 style="color: #d4af37; margin-bottom: 20px;">Komentar</h3>
+                    <div id="comments-${id}">
+                        ${item.comments.map(c => `
+                            <div class="comment">
+                                <div class="comment-author">${c.name}</div>
+                                <div class="comment-text">${c.text}</div>
+                            </div>
+                        `).join('') || '<p style="color: #c9a962;">Belum ada komentar. Jadilah yang pertama!</p>'}
+                    </div>
+                    
+                    <div class="comment-form">
+                        <input type="text" id="name-${id}" placeholder="Nama Anda" required>
+                        <textarea id="comment-${id}" placeholder="Tulis komentar Anda..." required></textarea>
+                        <button onclick="addComment('cerpen', ${id})">Kirim Komentar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function viewPuisi(id) {
+            const item = puisiData.find(p => p.id === id);
+            const section = document.getElementById('puisi');
+            
+            section.innerHTML = `
+                <button class="back-btn" onclick="event.preventDefault(); showSection('puisi')">← Kembali</button>
+                <h2 style="color: #d4af37; margin-bottom: 20px;">${item.title}</h2>
+                <div class="full-content protected-content" style="white-space: pre-line;">${item.content}</div>
+                
+                <div class="comments-section">
+                    <h3 style="color: #d4af37; margin-bottom: 20px;">Komentar</h3>
+                    <div id="comments-${id}">
+                        ${item.comments.map(c => `
+                            <div class="comment">
+                                <div class="comment-author">${c.name}</div>
+                                <div class="comment-text">${c.text}</div>
+                            </div>
+                        `).join('') || '<p style="color: #c9a962;">Belum ada komentar. Jadilah yang pertama!</p>'}
+                    </div>
+                    
+                    <div class="comment-form">
+                        <input type="text" id="name-${id}" placeholder="Nama Anda" required>
+                        <textarea id="comment-${id}" placeholder="Tulis komentar Anda..." required></textarea>
+                        <button onclick="addComment('puisi', ${id})">Kirim Komentar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addComment(type, id) {
+            const name = document.getElementById(`name-${id}`).value.trim();
+            const text = document.getElementById(`comment-${id}`).value.trim();
+            
+            if (!name || !text) {
+                alert('Mohon isi nama dan komentar!');
+                return;
+            }
+
+            const data = type === 'cerpen' ? cerpenData : puisiData;
+            const item = data.find(i => i.id === id);
+            item.comments.push({ name, text });
+
+            if (type === 'cerpen') viewCerpen(id);
+            else viewPuisi(id);
+        }
+
+        function changeBackground() {
+            const input = document.getElementById('bgUpload');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.body.style.background = `url('${e.target.result}') center/cover fixed`;
+                    document.body.style.filter = 'sepia(20%)';
+                    localStorage.setItem('customBg', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function resetBackground() {
+            document.body.style.background = '';
+            document.body.style.filter = '';
+            document.body.style.background = 'linear-gradient(135deg, #2c1810 0%, #4a2c1a 25%, #3d2416 50%, #2c1810 75%)';
+            localStorage.removeItem('customBg');
+        }
+
+        // Load custom background if exists
+        window.onload = function() {
+            const savedBg = localStorage.getItem('customBg');
+            if (savedBg) {
+                document.body.style.background = `url('${savedBg}') center/cover fixed`;
+                document.body.style.filter = 'sepia(20%)';
+            }
+        }
+    </script>
+</body>
+</html>
